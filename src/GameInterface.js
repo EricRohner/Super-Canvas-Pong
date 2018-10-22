@@ -11,7 +11,7 @@ class GameInterface extends Component {
         width: 15,
         height: 80,
         color: {
-          hex: 'ffffff',
+          hex: "ffffff",
           rgb: {
             b: 255,
             g: 255,
@@ -25,7 +25,7 @@ class GameInterface extends Component {
         width: 15,
         height: 80,
         color: {
-          hex: 'ffffff',
+          hex: "ffffff",
           rgb: {
             b: 255,
             g: 255,
@@ -37,23 +37,22 @@ class GameInterface extends Component {
 
       ball: {
         width: 15,
-        height: 80,
-        color: {
-          hex: 'ff0000',
-          rgb: {
-            b: 255,
-            g: 0,
-            r: 0,
-          }
-        },
+        height: 15,
+        color: "#ff0000",
         velocityY: 1,
         velocityX: 1,
       },
 
+      gameStart: false,
     }
   }
 
-  changeBallVelocity = (value) => {
+  _gameStart = () => {
+    console.log("game start")
+    this.setState({gameStart: true})
+  }
+
+  _changeBallVelocity = (value) => {
     this.setState({ball: { ...this.state.ball, velocityX: parseInt(value) } })
   }
 
@@ -107,9 +106,11 @@ class GameInterface extends Component {
             alignItems: 'center'
           }}
         >
-          {/*pass the game config fetch'd from the serve  r to the GameCanvas props*/}
+          {/* pass the game config fetch'd from the server to the GameCanvas props */}
           <GameCanvas {...this.state} />
-          <GameControls changeBallVelocity = {this.changeBallVelocity}/>
+          {/* pass state change functions to game controls */}
+          <GameControls _changeBallVelocity = {this._changeBallVelocity}
+                        _gameStart = {this._gameStart}/>
         </section>
       </main>
     )
