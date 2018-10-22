@@ -203,6 +203,7 @@ class GameCanvas extends Component {
   // take in game object and draw to canvas
   _drawBox = box => {
     this.ctx.fillStyle = box.color
+
     this.ctx.fillRect(box.x, box.y, box.width, box.height)
   };
 

@@ -36,8 +36,12 @@ class GameInterface extends Component {
     this.setState({ball: newBall})
   }
 
-  _updateP1 = (newP1) => {
-    this.setState({ player1: newP1 })
+  _updateP1 = (newPlayer) => {
+    this.setState({ player1: newPlayer })
+  }
+
+  _updateP2 = (newPlayer) => {
+    this.setState({ player2: newPlayer })
   }
 
   _gameStart = () => {
@@ -100,6 +104,7 @@ class GameInterface extends Component {
           {/* pass state change functions to game controls */}
           <GameControls {...this.state}
                         _updateP1 = {this._updateP1}
+                        _updateP2 = {this._updateP2}
                         _updateBall = {this._updateBall}
                         _gameStart = {this._gameStart} />
         </section>
