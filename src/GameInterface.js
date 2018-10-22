@@ -5,7 +5,6 @@ import GameControls from './components/GameControls'
 class GameInterface extends Component {
   constructor() {
     super()
-    this._getConfig = this._getConfig.bind(this)
     this.state = {
       player1: {
         width: 15,
@@ -33,12 +32,22 @@ class GameInterface extends Component {
     }
   }
 
+  _updateBall = (newBall) => {
+    this.setState({ball: newBall})
+  }
+
   _gameStart = () => {
     this.setState({ gameStart: true })
   }
 
+  //incoming value will be a string so parseInt to not break things, make sure to retain sign of previous value
   _changeBallVelocity = ( value ) => {
-    this.setState({ball: { ...this.state.ball, velocityX: parseInt( value ) } })
+    if(this.state.ball.velocityX > 0){
+      this.setState({ball: { ...this.state.ball, velocityX: parseInt( value ) } })
+    } else {
+      this.setState({ball: { ...this.state.ball, velocityX: parseInt( value ) * -1} })
+    }
+
   }
 
   // expect an incoming value string. Convert it to hex and add padding 0 if appropriate
@@ -107,7 +116,8 @@ y
           }}
         >
           {/* pass the game config fetch'd from the server to the GameCanvas props */}
-          <GameCanvas {...this.state} />
+          <GameCanvas {...this.state}
+                      _updateBall = {this._updateBall}/>
           {/* pass state change functions to game controls */}
           <GameControls _changeBallVelocity = {this._changeBallVelocity}
                         _gameStart = {this._gameStart}
