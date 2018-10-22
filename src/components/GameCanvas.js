@@ -6,7 +6,6 @@ class GameCanvas extends Component {
     //deadBalls is only ever pushed to, never referenced and never cleared
     //we can safely remove it completely from the codebase
     //this.deadBalls = [];
-    this.initXVelocity = 2;
   }
 
   componentDidMount = () => {
@@ -77,12 +76,12 @@ class GameCanvas extends Component {
     this.frameId = window.requestAnimationFrame(this._renderLoop);
   };
 
-  // change game configuration as new info comes in from server
+  // change game configuration as new info comes in
   _updateConfig = () => {
-    this.player1.width = this.props.player1Width
-    this.player1.height = this.props.player1Height
-    this.player2.width = this.props.player2Width
-    this.player2.height = this.props.player2Height
+    this.player1 = {...this.player1, ...this.props.player1}
+    this.player2 = {...this.player2, ...this.props.player2}
+    this.gameBall.velocityX = this.props.ball.velocityX
+    console.log(this.gameBall.velocityX)
   }
 
   // watch ball movement in Y dimension and handle top/bottom boundary collisions, then call _ballCollisionX
@@ -104,6 +103,7 @@ class GameCanvas extends Component {
 
   // watch ball movement in X dimension and handle paddle collisions and score setting/ball resetting, then call _drawRender
   _ballCollisionX = () => {
+    console.log(this.gameBall.velocityX)
     if (
       this.gameBall.x + this.gameBall.velocityX <=
         this.player1.x + this.player1.width &&
@@ -115,7 +115,8 @@ class GameCanvas extends Component {
       //would result in it switching X direction every frame. Since few players have frame
       //perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       //to lose the volley. Players don't like random chance when it can only hurt them.
-      this.gameBall.velocityX = this.initXVelocity;
+      this.gameBall.velocityX = Math.abs(this.gameBall.velocityX);
+      console.log("Really?")
       //Added VelocityY change from moving paddle. Velocity change is increased every frame until
       //the ball exits the paddle when hitting the ball with the top or bottom of the the paddle.
       //As this requires skill and rewards the player by making a return more difficult it's a
@@ -136,7 +137,8 @@ class GameCanvas extends Component {
       //would result in it switching X direction every frame. Since few players have frame
       //perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       //to lose the volley. Players don't like random chance when it can only hurt them.
-      this.gameBall.velocityX = this.initXVelocity * -1;
+      this.gameBall.velocityX = (Math.abs(this.gameBall.velocityX)) * -1;
+      console.log("how?")
       //Added VelocityY change from moving paddle. Velocity change is increased every frame until
       //the ball exits the paddle when hitting the ball with the top or bottom of the the paddle.
       //As this requires skill and rewards the player by making a return more difficult it's a
