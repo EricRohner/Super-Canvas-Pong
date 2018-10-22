@@ -36,33 +36,12 @@ class GameInterface extends Component {
     this.setState({ball: newBall})
   }
 
+  _updateP1 = (newP1) => {
+    this.setState({ player1: newP1 })
+  }
+
   _gameStart = () => {
     this.setState({ gameStart: true })
-  }
-
-  //incoming value will be a string so parseInt to not break things, make sure to retain sign of previous value
-  _changeBallVelocity = ( value ) => {
-    if(this.state.ball.velocityX > 0){
-      this.setState({ball: { ...this.state.ball, velocityX: parseInt( value ) } })
-    } else {
-      this.setState({ball: { ...this.state.ball, velocityX: parseInt( value ) * -1} })
-    }
-
-  }
-
-  // expect an incoming value string. Convert it to hex and add padding 0 if appropriate
-  _intToHex = (value) => {
-    let str = parseInt(value).toString(16)
-    if (str.length < 2) {
-      str = "0" + str
-    }
-    return str
-  }
-
-  _changeP1Red = ( value ) => {
-    const red = this._intToHex(value)
-    this.setState({player1: { ...this.state.player1, color: `#${red}${this.state.player1.color.substring( 3, 7 )}` } })
-    console.log(this.state.player1.color)
   }
 
   async _getConfig() {
@@ -93,7 +72,7 @@ class GameInterface extends Component {
     //last recursively call self after the delay.
     setTimeout(this._getConfig, resp.gameData.newDelay)
   }
-y
+
   render() {
     //this._getConfig()
 
@@ -119,9 +98,10 @@ y
           <GameCanvas {...this.state}
                       _updateBall = {this._updateBall}/>
           {/* pass state change functions to game controls */}
-          <GameControls _changeBallVelocity = {this._changeBallVelocity}
-                        _gameStart = {this._gameStart}
-                        _changeP1Red = {this._changeP1Red}/>
+          <GameControls {...this.state}
+                        _updateP1 = {this._updateP1}
+                        _updateBall = {this._updateBall}
+                        _gameStart = {this._gameStart} />
         </section>
       </main>
     )
