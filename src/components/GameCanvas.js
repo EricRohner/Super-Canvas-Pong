@@ -12,7 +12,7 @@ class GameCanvas extends Component {
   componentDidUpdate() {
     this.player1 = {...this.player1, ...this.props.player1}
     this.player2 = {...this.player2, ...this.props.player2}
-    this.gameBall= {...this.gameBall, ...this.props.ball}
+    this.gameBall = {...this.gameBall, ...this.props.ball}
   }
 
   componentDidMount = () => {
@@ -101,11 +101,9 @@ class GameCanvas extends Component {
       this.gameBall.velocityY = this.gameBall.velocityY * -1
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
-      this.props._updateBall(this.gameBall)
     } else {
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
-      this.props._updateBall(this.gameBall)
     }
     this._ballCollisionX()
   }
@@ -124,17 +122,14 @@ class GameCanvas extends Component {
       // perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       // to lose the volley. Players don't like random chance hurting them in a skill game.
       this.gameBall.velocityX = Math.abs(this.gameBall.velocityX);
-      this.props._updateBall(this.gameBall)
       // Added VelocityY change from moving paddle. Velocity change is increased every frame until
       // the ball exits the paddle when hitting the ball with the top or bottom of the the paddle.
       // As this requires skill and rewards the player by making a return more difficult it's a
       // gameplay feature, not a bug. Also, it just feels right for the game physics.
       if (83 in this.keys) {
         this.gameBall.velocityY += 1
-        this.props._updateBall(this.gameBall)
       } else if (87 in this.keys) {
         this.gameBall.velocityY -= 1
-        this.props._updateBall(this.gameBall)
       }
     } else if (
       this.gameBall.x + this.gameBall.width + this.gameBall.velocityX >=
@@ -146,10 +141,8 @@ class GameCanvas extends Component {
       this.gameBall.velocityX = (Math.abs(this.gameBall.velocityX)) * -1
       if (40 in this.keys) {
         this.gameBall.velocityY += 1
-        this.props._updateBall(this.gameBall)
       } else if (38 in this.keys) {
         this.gameBall.velocityY -= 1
-        this.props._updateBall(this.gameBall)
       }
     } else if (
       this.gameBall.x + this.gameBall.velocityX <
@@ -186,7 +179,6 @@ class GameCanvas extends Component {
     } else {
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
-      this.props._updateBall(this.gameBall)
     }
   }
 
@@ -260,7 +252,7 @@ class GameCanvas extends Component {
         this.y = y || 10
         this.width = width
         this.height = height
-        this.color = color || "#FFF"
+        this.color = color || "#FFFFFF"
         this.velocityX = velocityX || 2
         this.velocityY = velocityY || 2
       }
