@@ -6,30 +6,14 @@ class GameInterface extends Component {
   constructor() {
     super()
     this.state = {
-      player1: {
-        width: 15,
-        height: 80,
-        color: "#ffffff",
-        velocityY: 1
-      },
 
-      player2: {
-        width: 15,
-        height: 80,
-        color: "#ffffff",
-        velocityY: 1
-      },
-
-      ball: {
-        width: 15,
-        height: 15,
-        color: "#ff0000",
-        velocityY: 1,
-        velocityX: 1
-      },
-
+      pointsToWin: 10,
       gameStart: false
     }
+  }
+
+  _updateState = (player1, player2, ball) => {
+    this.setState({player1: player1, player2: player2, ball: ball})
   }
 
   _updateBall = (newBall) => {
@@ -46,6 +30,10 @@ class GameInterface extends Component {
 
   _gameStart = () => {
     this.setState({ gameStart: true })
+  }
+
+  _changePointsToWin = (value) => {
+    this.setState({ pointsToWin: parseInt(value)})
   }
 
   async _getConfig() {
@@ -81,32 +69,19 @@ class GameInterface extends Component {
     //this._getConfig()
 
     return (
-      <main
-        style={{
-          width: '100vw',
-          height: '100vh',
-          background: '#000',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <section
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
-        >
+      <main className="gameInterface">
+        <section>
           {/* pass the game config fetch'd from the server to the GameCanvas props */}
-          <GameCanvas {...this.state}
-                      _updateBall = {this._updateBall}/>
+          <GameCanvas { ...this.state }
+                      _updateState = {this._updateState}
+                      _updateBall = { this._updateBall } />
           {/* pass state change functions to game controls */}
-          <GameControls {...this.state}
-                        _updateP1 = {this._updateP1}
-                        _updateP2 = {this._updateP2}
-                        _updateBall = {this._updateBall}
-                        _gameStart = {this._gameStart} />
+          <GameControls { ...this.state }
+                        _updateP1 = { this._updateP1 }
+                        _updateP2 = { this._updateP2 }
+                        _updateBall = { this._updateBall }
+                        _gameStart = { this._gameStart }
+                        _changePointsToWin = { this._changePointsToWin } />
         </section>
       </main>
     )

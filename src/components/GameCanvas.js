@@ -44,7 +44,7 @@ class GameCanvas extends Component {
       y: 200,
       width: 15,
       height: 80,
-      color: "#00ffff",
+      color: "#FFFFFF",
       velocityY: 2
     })
     this.player2 = new this.GameClasses.Box({
@@ -52,7 +52,7 @@ class GameCanvas extends Component {
       y: 200,
       width: 15,
       height: 80,
-      color: "#FFF",
+      color: "#FFFFFF",
       velocityY: 2
     })
     this.boardDivider = new this.GameClasses.Box({
@@ -60,7 +60,7 @@ class GameCanvas extends Component {
       y: -1,
       width: 5,
       height: this.canvas.height + 1,
-      color: "#FFF"
+      color: "#FFFFFF"
     })
     this.gameBall = new this.GameClasses.Box({
       x: this.canvas.width / 2,
@@ -86,6 +86,7 @@ class GameCanvas extends Component {
       this._userInput(this.player1)
       this._userInput(this.player2)
     }
+    this.props._updateState(this.player1, this.player2, this.gameBall)
     this._drawRender()
     this.frameId = window.requestAnimationFrame(this._renderLoop)
   }

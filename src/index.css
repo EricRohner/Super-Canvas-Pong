@@ -22,3 +22,18 @@ code {
 .top {
   display: flex;
 }
+
+.gameInterface {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justifyContent: center;
+  alignItems: center
+}
+
+.gameInterface section {
+  display: flex;
+  justify-content: center
+}
