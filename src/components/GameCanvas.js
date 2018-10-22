@@ -11,6 +11,7 @@ class GameCanvas extends Component {
   //when props update, update the game to reflect the changes.
   componentDidUpdate() {
     this.player1 = {...this.player1, ...this.props.player1}
+    console.log(this.props.player1.color)
     this.player2 = {...this.player2, ...this.props.player2}
     this.gameBall= {...this.gameBall, ...this.props.ball}
   }
@@ -42,7 +43,7 @@ class GameCanvas extends Component {
       y: 200,
       width: 15,
       height: 80,
-      color: "#FFF",
+      color: "#00ffff",
       velocityY: 2
     })
     this.player2 = new this.GameClasses.Box({
@@ -107,7 +108,6 @@ class GameCanvas extends Component {
 
   // watch ball movement in X dimension and handle paddle collisions and score setting/ball resetting, then call _drawRender
   _ballCollisionX = () => {
-    console.log(this.gameBall.velocityX)
     if (
       this.gameBall.x + this.gameBall.velocityX <=
         this.player1.x + this.player1.width &&

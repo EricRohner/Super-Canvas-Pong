@@ -10,29 +10,15 @@ class GameInterface extends Component {
       player1: {
         width: 15,
         height: 80,
-        color: {
-          hex: "ffffff",
-          rgb: {
-            b: 255,
-            g: 255,
-            r: 255,
-          }
-        },
-        velocityY: 1,
+        color: "#ffffff",
+        velocityY: 1
       },
 
       player2: {
         width: 15,
         height: 80,
-        color: {
-          hex: "ffffff",
-          rgb: {
-            b: 255,
-            g: 255,
-            r: 255,
-          }
-        },
-        velocityY: 1,
+        color: "#ffffff",
+        velocityY: 1
       },
 
       ball: {
@@ -40,20 +26,34 @@ class GameInterface extends Component {
         height: 15,
         color: "#ff0000",
         velocityY: 1,
-        velocityX: 1,
+        velocityX: 1
       },
 
-      gameStart: false,
+      gameStart: false
     }
   }
 
   _gameStart = () => {
-    console.log("game start")
-    this.setState({gameStart: true})
+    this.setState({ gameStart: true })
   }
 
-  _changeBallVelocity = (value) => {
-    this.setState({ball: { ...this.state.ball, velocityX: parseInt(value) } })
+  _changeBallVelocity = ( value ) => {
+    this.setState({ball: { ...this.state.ball, velocityX: parseInt( value ) } })
+  }
+
+  // expect an incoming value string. Convert it to hex and add padding 0 if appropriate
+  _intToHex = (value) => {
+    let str = parseInt(value).toString(16)
+    if (str.length < 2) {
+      str = "0" + str
+    }
+    return str
+  }
+
+  _changeP1Red = ( value ) => {
+    const red = this._intToHex(value)
+    this.setState({player1: { ...this.state.player1, color: `#${red}${this.state.player1.color.substring( 3, 7 )}` } })
+    console.log(this.state.player1.color)
   }
 
   async _getConfig() {
@@ -84,9 +84,9 @@ class GameInterface extends Component {
     //last recursively call self after the delay.
     setTimeout(this._getConfig, resp.gameData.newDelay)
   }
-
+y
   render() {
-   // this._getConfig()
+    //this._getConfig()
 
     return (
       <main
@@ -110,7 +110,8 @@ class GameInterface extends Component {
           <GameCanvas {...this.state} />
           {/* pass state change functions to game controls */}
           <GameControls _changeBallVelocity = {this._changeBallVelocity}
-                        _gameStart = {this._gameStart}/>
+                        _gameStart = {this._gameStart}
+                        _changeP1Red = {this._changeP1Red}/>
         </section>
       </main>
     )

@@ -16,7 +16,7 @@ class GameControls extends Component {
         </section>
         <section>
           <label htmlFor="P1Red">P1 red: </label>
-          <input className="P1Red" type="range" min="0" max="255" />
+          <input className="P1Red" onChange={(e) => this.props._changeP1Red(e.target.value)} type="range" min="0" max="255" />
           <label htmlFor="P1Green">P1 green: </label>
           <input className="P1Green" type="range" min="0" max="255" />
           <label htmlFor="P1Blue">P1 blue: </label>
