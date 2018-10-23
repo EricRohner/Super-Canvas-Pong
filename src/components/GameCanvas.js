@@ -8,7 +8,7 @@ class GameCanvas extends Component {
     //this.deadBalls = [];
   }
 
-  //when props update, update the game to reflect the changes.
+  //when props update, update the gameCanvas to reflect the changes.
   componentDidUpdate() {
     this.player1 = {...this.player1, ...this.props.player1}
     this.player2 = {...this.player2, ...this.props.player2}
