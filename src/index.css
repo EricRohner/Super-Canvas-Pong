@@ -29,11 +29,11 @@ code {
   background: #000;
   display: flex;
   flex-direction: column;
-  justifyContent: center;
-  alignItems: center
+  alignItems: center;
+  justify-content: center;
 }
 
-.gameInterface section {
+.section {
   display: flex;
   justify-content: center
 }

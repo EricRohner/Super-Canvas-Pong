@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+// removed useless constructor and 2 lines that pushed to deadBalls[]
+
 class GameCanvas extends Component {
   //when props update, update the gameCanvas to reflect the changes.
   componentDidUpdate() {
@@ -32,26 +34,12 @@ class GameCanvas extends Component {
     this._renderLoop()
   }
 
-  _getAiTarget = (x, y, vY, vX) => {
-   while((y + vY > 0 ) && (y + vY < this.canvas.height) && (x + vX < this.canvas.width)){
-     y += vY
-     x += vX
-     console.log("x " + x)
-     console.log("y " + y)
-   }
-    if ((x + vX) >= this.canvas.width){
-     return y
-    } else {
-     return this._getAiTarget(x, y, vY * -1, vX)
-    }
-  }
-
   // initialize gamestate variables
   _initGame = () => {
     this._initGameObjects()
     this.p1Score = 0
     this.p2Score = 0
-    this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityY, this.gameBall.velocityX)
+    this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityX, this.gameBall.velocityY)
     this.winner = false
   }
 
@@ -90,6 +78,24 @@ class GameCanvas extends Component {
       velocityY: 1
     })
     this.props._updateState(this.player1, this.player2, this.gameBall)
+  }
+
+  // the way this looks, it appears that the AI should perfectly predict the ball's movement every single time.
+  // by only calling it at certain times in the code we can make it appear that the ai randomly misses. Users will
+  // eventually catch on and abuse the AI but it's pretty fun to play against and has a decently balanced difficulty.
+  // can you figure out how to make it miss every time?
+  _getAiTarget = (x, y, vX, vY) => {
+    // simulate the ball moving, if it makes it to this.canvas.width return y as the ai's target
+    // if it hits the top or bottom of the screen recursively call with the velocityY's sign switched
+    while((y + vY > 0 ) && (y + vY < this.canvas.height) && (x + vX < this.canvas.width)){
+      y += vY
+      x += vX
+    }
+    if ((x + vX) >= this.canvas.width){
+      return y
+    } else {
+      return this._getAiTarget(x, y, vX, vY * -1)
+    }
   }
 
   // recursively process game state and redraw canvas
@@ -147,7 +153,7 @@ class GameCanvas extends Component {
       // perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       // to lose the volley. Players don't like random chance hurting them in a skill game.
       if(this.props.ai && this.gameBall.velocityX < 0){
-        this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityY, this.gameBall.velocityX * -1)
+        this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityX  * -1, this.gameBall.velocityY)
       }
       this.gameBall.velocityX = Math.abs(this.gameBall.velocityX)
       // check if the paddle is moving and increase ball velocityY accordingly. This stacks every frame
@@ -195,7 +201,8 @@ class GameCanvas extends Component {
         this.props._changeGameStart()
       }
       this.gameBall = ({ ...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
-      this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityY, this.gameBall.velocityX)
+      // the ball has bounced off player1's paddle so retarget the ai.
+      this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityX, this.gameBall.velocityY)
     } else {
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
@@ -226,7 +233,7 @@ class GameCanvas extends Component {
   _displayWinner = (winner) => {
     this.ctx.font = '20px Arial'
     this.ctx.fillStyle = 'rgb(255, 255, 255)'
-    this.ctx.fillText('Player ' + winner + ' wins!', this.canvas.width / 2 + (this.p1Score === 2 ? -155 : 33), 150)
+    this.ctx.fillText('Player ' + winner + ' wins!', this.canvas.width / 2 + (this.winner === 2 ? 33 : -155), 150)
   }
 
   // render player 1 score

@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/src/GameInterface.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameInterface.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/GameCanvas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GameCanvas.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/GameControls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GameControls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -22,8 +23,8 @@
       <file leaf-file-name="GameCanvas.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/GameCanvas.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="111" column="21" lean-forward="true" selection-start-line="110" selection-start-column="24" selection-end-line="111" selection-end-column="21" />
+            <state relative-caret-position="217">
+              <caret line="85" column="55" selection-start-line="85" selection-start-column="55" selection-end-line="85" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -31,8 +32,8 @@
       <file leaf-file-name="GameInterface.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GameInterface.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="885">
-              <caret line="61" column="40" selection-start-line="61" selection-start-column="40" selection-end-line="61" selection-end-column="40" />
+            <state relative-caret-position="210">
+              <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -43,8 +44,8 @@
       <file leaf-file-name="GameControls.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/GameControls.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1440">
-              <caret line="96" column="47" lean-forward="true" selection-start-line="96" selection-start-column="47" selection-end-line="96" selection-end-column="47" />
+            <state relative-caret-position="315">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
             </state>
           </provider>
         </entry>
@@ -55,6 +56,8 @@
     <findStrings>
       <find>paddle</find>
       <find>setGameReady</find>
+      <find>_getAiTarget</find>
+      <find>pointsToWin</find>
     </findStrings>
     <replaceStrings>
       <replace>player</replace>
@@ -69,8 +72,8 @@
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/index.css" />
-        <option value="$PROJECT_DIR$/src/components/GameControls.js" />
         <option value="$PROJECT_DIR$/src/GameInterface.js" />
+        <option value="$PROJECT_DIR$/src/components/GameControls.js" />
         <option value="$PROJECT_DIR$/src/components/GameCanvas.js" />
       </list>
     </option>
@@ -167,15 +170,16 @@
       <workItem from="1540276994063" duration="320000" />
       <workItem from="1540277486831" duration="11316000" />
       <workItem from="1540324756094" duration="373000" />
-      <workItem from="1540325312250" duration="754000" />
+      <workItem from="1540325312250" duration="8616000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73398000" />
+    <option name="totallyTimeSpent" value="81260000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -395,32 +399,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+        <state relative-caret-position="111">
+          <caret line="30" column="25" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/GameControls.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameInterface.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="885">
-          <caret line="61" column="40" selection-start-line="61" selection-start-column="40" selection-end-line="61" selection-end-column="40" />
+        <state relative-caret-position="210">
+          <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/GameControls.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1440">
-          <caret line="96" column="47" lean-forward="true" selection-start-line="96" selection-start-column="47" selection-end-line="96" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/GameCanvas.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="111" column="21" lean-forward="true" selection-start-line="110" selection-start-column="24" selection-end-line="111" selection-end-column="21" />
+        <state relative-caret-position="217">
+          <caret line="85" column="55" selection-start-line="85" selection-start-column="55" selection-end-line="85" selection-end-column="55" />
         </state>
       </provider>
     </entry>
