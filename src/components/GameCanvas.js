@@ -165,15 +165,7 @@ class GameCanvas extends Component {
       }
       // this.deadBalls appears to be an intentional memory leak
       // this.deadBalls.push(this.gameBall);
-      this.gameBall = new this.GameClasses.Box({
-        x: this.canvas.width / 2,
-        y: this.canvas.height / 2,
-        width: 15,
-        height: 15,
-        color: this,
-        velocityX: this.gameBall.velocityX,
-        velocityY: 1,
-      })
+      this.gameBall = ({...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
     } else if (
       this.gameBall.x + this.gameBall.velocityX >
       this.player2.x + this.player2.width
@@ -185,15 +177,7 @@ class GameCanvas extends Component {
       }
       // this.deadBalls appears to be an intentional memory leak
       // this.deadBalls.push(this.gameBall);
-      this.gameBall = new this.GameClasses.Box({
-        x: this.canvas.width / 2,
-        y: this.canvas.height / 2,
-        width: 15,
-        height: 15,
-        color: '#FF0000',
-        velocityX: this.gameBall.velocityX,
-        velocityY: 1
-      })
+      this.gameBall = ({...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
     } else {
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
