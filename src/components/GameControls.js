@@ -94,6 +94,8 @@ class GameControls extends Component {
         <section>
           <label htmlFor="ballType">Round Ball</label>
           <input className="ballType" type="checkbox" />
+          <label htmlFor="ai">Enable AI</label>
+          <input className="ai" onClick={this.props._toggleAi} type="checkbox" />
         </section>
       </main>
     )

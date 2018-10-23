@@ -11,7 +11,8 @@ class GameInterface extends Component {
       ball: {},
       pointsToWin: 10,
       gameStart: false,
-      reset: false
+      reset: false,
+      ai: false
     }
   }
 
@@ -57,6 +58,10 @@ class GameInterface extends Component {
     console.log(this.state.reset)
   }
 
+  _toggleAi = () => {
+    this.setState({ ai: !this.state.ai})
+  }
+
   // this function is our workhorse. It takes the three most used state objects and writes them to state.
   // it will be used a lot in GameControls and GameCanvas.
   _updateState = (player1, player2, ball) => {
@@ -86,6 +91,7 @@ class GameInterface extends Component {
                       _changeGameStart={this._changeGameStart} />
           {/* pass state change callback functions to game controls */}
           <GameControls {...this.state}
+                        _toggleAi={this._toggleAi}
                         _toggleReset={this._toggleReset}
                         _updateState={this._updateState}
                         _changeGameStart={this._changeGameStart}

@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 
 class GameCanvas extends Component {
-  constructor(props) {
-    super(props)
-    //deadBalls is only ever pushed to, never referenced and never cleared
-    //we can safely remove it completely from the codebase
-    //this.deadBalls = [];
-
-  }
-
   //when props update, update the gameCanvas to reflect the changes.
   componentDidUpdate() {
     this.player1 = { ...this.player1, ...this.props.player1 }
@@ -33,19 +25,38 @@ class GameCanvas extends Component {
       this.keys[e.keyCode] = 1
       if (e.target.nodeName !== 'INPUT') e.preventDefault()
     })
-
     window.addEventListener('keyup', e => delete this.keys[e.keyCode])
     // declare initial variables
-    this._setGameReady()
+    this._initGame()
     // start render loop
     this._renderLoop()
   }
 
-  // instantiate our game elements
-  _setGameReady = () => {
+  _getAiTarget = (x, y, vY, vX) => {
+   while((y + vY > 0 ) && (y + vY < this.canvas.height) && (x + vX < this.canvas.width)){
+     y += vY
+     x += vX
+     console.log("x " + x)
+     console.log("y " + y)
+   }
+    if ((x + vX) >= this.canvas.width){
+     return y
+    } else {
+     return this._getAiTarget(x, y, vY * -1, vX)
+    }
+  }
+
+  // initialize gamestate variables
+  _initGame = () => {
+    this._initGameObjects()
     this.p1Score = 0
     this.p2Score = 0
-    this.winner = false;
+    this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityY, this.gameBall.velocityX)
+    this.winner = false
+  }
+
+  // initialize game objects
+  _initGameObjects = () => {
     this.player1 = new this.GameClasses.Box({
       x: 10,
       y: 200,
@@ -93,8 +104,12 @@ class GameCanvas extends Component {
     }
     // the player has clicked reset so call the game init function and turn off the reset toggle
     if (this.props.reset) {
-      this._setGameReady()
+      this._initGame()
       this.props._toggleReset()
+    }
+    // if ai is turned on run _aiInput()
+    if (this.props.ai) {
+      this._aiInput()
     }
     this.props._updateState(this.player1, this.player2, this.gameBall)
     this._drawRender()
@@ -131,11 +146,12 @@ class GameCanvas extends Component {
       // would result in it switching X direction every frame. Since few players have frame
       // perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       // to lose the volley. Players don't like random chance hurting them in a skill game.
+      if(this.props.ai && this.gameBall.velocityX < 0){
+        this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityY, this.gameBall.velocityX * -1)
+      }
       this.gameBall.velocityX = Math.abs(this.gameBall.velocityX)
-      // Added VelocityY change from moving paddle. Velocity change is increased every frame until
-      // the ball exits the paddle when hitting the ball with the top or bottom of the the paddle.
-      // As this requires skill and rewards the player by making a return more difficult it's a
-      // gameplay feature, not a bug. Also, it just feels right for the game physics.
+      // check if the paddle is moving and increase ball velocityY accordingly. This stacks every frame
+      // until the ball leaves the paddle making a previously deadly top and bottom hits advantageous. Free feature!
       if (83 in this.keys) {
         this.gameBall.velocityY += 1
       } else if (87 in this.keys) {
@@ -148,6 +164,7 @@ class GameCanvas extends Component {
       this.gameBall.y + this.gameBall.velocityY <=
       this.player2.y + this.player2.height
     ) {
+      // see bug fix above
       this.gameBall.velocityX = (Math.abs(this.gameBall.velocityX)) * -1
       if (40 in this.keys) {
         this.gameBall.velocityY += 1
@@ -159,25 +176,26 @@ class GameCanvas extends Component {
       this.player1.x - this.player1.width
     ) {
       this.p2Score += 1
+      // this is where I'd call this._initGameObjects() to reset the randomization from the server after a point is scored.
+      // I personally think the game's more fun if you don't. Design choice made.
       if (this.p2Score >= this.props.pointsToWin) {
         this.winner = 2
         this.props._changeGameStart()
       }
-      // this.deadBalls appears to be an intentional memory leak
-      // this.deadBalls.push(this.gameBall);
-      this.gameBall = ({...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
+      this.gameBall = ({ ...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
     } else if (
       this.gameBall.x + this.gameBall.velocityX >
       this.player2.x + this.player2.width
     ) {
       this.p1Score += 1
+      // this is where I'd call this._initGameObjects() to reset the randomization from the server after a point is scored.
+      // I personally think the game's more fun if you don't. Design choice made.
       if (this.p1Score >= this.props.pointsToWin) {
         this.winner = 1
         this.props._changeGameStart()
       }
-      // this.deadBalls appears to be an intentional memory leak
-      // this.deadBalls.push(this.gameBall);
-      this.gameBall = ({...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
+      this.gameBall = ({ ...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
+      this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityY, this.gameBall.velocityX)
     } else {
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
@@ -187,8 +205,9 @@ class GameCanvas extends Component {
   // clear canvas and redraw according to new game state
   _drawRender = () => {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    if(this.winner){
-    this._displayWinner(this.winner)}
+    if (this.winner) {
+      this._displayWinner(this.winner)
+    }
     this._displayScore1()
     this._displayScore2()
     this._drawBox(this.player1)
@@ -207,7 +226,7 @@ class GameCanvas extends Component {
   _displayWinner = (winner) => {
     this.ctx.font = '20px Arial'
     this.ctx.fillStyle = 'rgb(255, 255, 255)'
-    this.ctx.fillText("Player " + winner + " wins!", this.canvas.width / 2 + (this.p1Score === 2 ? -155 : 33), 150)
+    this.ctx.fillText('Player ' + winner + ' wins!', this.canvas.width / 2 + (this.p1Score === 2 ? -155 : 33), 150)
   }
 
   // render player 1 score
@@ -224,8 +243,17 @@ class GameCanvas extends Component {
     this.ctx.fillText(this.p2Score, this.canvas.width / 2 + 33, 30)
   }
 
+  _aiInput = () => {
+    if (this.player2.y > (this.aiTarget - this.player2.height/2)) {
+      this.player2.y -= this.player1.velocityY
+    } else if (this.player2.y < (this.aiTarget - this.player2.height/2)) {
+      this.player2.y += this.player1.velocityY
+    }
+  }
+
   //track user input
   _userInput = () => {
+
     if (87 in this.keys) {
       if (this.player1.y - this.player1.velocityY > 0)
         this.player1.y -= this.player1.velocityY
