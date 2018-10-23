@@ -40,7 +40,8 @@ class GameControls extends Component {
     return (
       <main className="controlBody">
         <section className="top">
-          <p onClick= {this.props._gameStart}>Start Game</p>
+          <p onClick= {this.props._changeGameStart}>Start/Pause</p>
+          <p onClick= {this.props._toggleReset}>Reset</p>
           <label htmlFor="pointsToWin"> Points to win: </label>
           <input className="pointsToWin" onChange={(e) => this.props._changePointsToWin(e.target.value)} />
           <label htmlFor="ballVelocity"> Ball Velocity: </label>

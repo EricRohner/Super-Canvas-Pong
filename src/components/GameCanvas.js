@@ -1,18 +1,19 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
 class GameCanvas extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     //deadBalls is only ever pushed to, never referenced and never cleared
     //we can safely remove it completely from the codebase
     //this.deadBalls = [];
+
   }
 
   //when props update, update the gameCanvas to reflect the changes.
   componentDidUpdate() {
-    this.player1 = {...this.player1, ...this.props.player1}
-    this.player2 = {...this.player2, ...this.props.player2}
-    this.gameBall = {...this.gameBall, ...this.props.ball}
+    this.player1 = { ...this.player1, ...this.props.player1 }
+    this.player2 = { ...this.player2, ...this.props.player2 }
+    this.gameBall = { ...this.gameBall, ...this.props.ball }
   }
 
   componentDidMount = () => {
@@ -22,29 +23,35 @@ class GameCanvas extends Component {
   _initializeGameCanvas = () => {
     // initialize canvas element and bind it to our React class
     this.canvas = this.refs.pong_canvas
-    this.ctx = this.canvas.getContext("2d")
+    this.ctx = this.canvas.getContext('2d')
 
-    // declare initial variables
-    this.p1Score = 0
-    this.p2Score = 0
     this.keys = {}
-
     // add keyboard input listeners to handle user interactions
-    window.addEventListener("keydown", e => {
+    window.addEventListener('keydown', e => {
       // keycode is technically deprecated. In a production environment we'd want to test key and keyIdentifier !== undefined.
       // however, since keyCode is actually the most supported one I'll stick with it.
-      this.keys[e.keyCode] = 1;
-      if (e.target.nodeName !== "INPUT") e.preventDefault()
+      this.keys[e.keyCode] = 1
+      if (e.target.nodeName !== 'INPUT') e.preventDefault()
     })
-    window.addEventListener("keyup", e => delete this.keys[e.keyCode])
 
-    // instantiate our game elements
+    window.addEventListener('keyup', e => delete this.keys[e.keyCode])
+    // declare initial variables
+    this._setGameReady()
+    // start render loop
+    this._renderLoop()
+  }
+
+  // instantiate our game elements
+  _setGameReady = () => {
+    this.p1Score = 0
+    this.p2Score = 0
+    this.winner = false;
     this.player1 = new this.GameClasses.Box({
       x: 10,
       y: 200,
       width: 15,
       height: 80,
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       velocityY: 2
     })
     this.player2 = new this.GameClasses.Box({
@@ -52,7 +59,7 @@ class GameCanvas extends Component {
       y: 200,
       width: 15,
       height: 80,
-      color: "#FFFFFF",
+      color: '#FFFFFF',
       velocityY: 2
     })
     this.boardDivider = new this.GameClasses.Box({
@@ -60,31 +67,34 @@ class GameCanvas extends Component {
       y: -1,
       width: 5,
       height: this.canvas.height + 1,
-      color: "#FFFFFF"
+      color: '#FFFFFF'
     })
     this.gameBall = new this.GameClasses.Box({
       x: this.canvas.width / 2,
       y: this.canvas.height / 2,
       width: 15,
       height: 15,
-      color: "#FF0000",
+      color: '#FF0000',
       velocityX: 3,
       velocityY: 1
     })
-
-    // start render loop
-    this._renderLoop()
+    this.props._updateState(this.player1, this.player2, this.gameBall)
   }
 
   // recursively process game state and redraw canvas
   _renderLoop = () => {
 
-    // we want to stop all movement until the game starts. _drawRender has been moved here from _ballCollisionX
+    // we want to stop all movement until the game starts. _drawRender has been moved to the render loop from _ballCollisionX
     // so that the players can see their changes to ball and paddle colors pre-game.
-    if ( this.props.gameStart ) {
+    if (this.props.gameStart) {
       this._ballCollisionY()
       this._userInput(this.player1)
       this._userInput(this.player2)
+    }
+    // the player has clicked reset so call the game init function and turn off the reset toggle
+    if (this.props.reset) {
+      this._setGameReady()
+      this.props._toggleReset()
     }
     this.props._updateState(this.player1, this.player2, this.gameBall)
     this._drawRender()
@@ -96,7 +106,7 @@ class GameCanvas extends Component {
     if (
       this.gameBall.y + this.gameBall.velocityY <= 0 ||
       this.gameBall.y + this.gameBall.velocityY + this.gameBall.height >=
-        this.canvas.height
+      this.canvas.height
     ) {
       this.gameBall.velocityY = this.gameBall.velocityY * -1
       this.gameBall.x += this.gameBall.velocityX
@@ -112,16 +122,16 @@ class GameCanvas extends Component {
   _ballCollisionX = () => {
     if (
       this.gameBall.x + this.gameBall.velocityX <=
-        this.player1.x + this.player1.width &&
+      this.player1.x + this.player1.width &&
       this.gameBall.y + this.gameBall.velocityY > this.player1.y &&
       this.gameBall.y + this.gameBall.velocityY <=
-        this.player1.y + this.player1.height
+      this.player1.y + this.player1.height
     ) {
       // Fixed bug where "catching" the ball with the top or bottom of the paddle
       // would result in it switching X direction every frame. Since few players have frame
       // perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       // to lose the volley. Players don't like random chance hurting them in a skill game.
-      this.gameBall.velocityX = Math.abs(this.gameBall.velocityX);
+      this.gameBall.velocityX = Math.abs(this.gameBall.velocityX)
       // Added VelocityY change from moving paddle. Velocity change is increased every frame until
       // the ball exits the paddle when hitting the ball with the top or bottom of the the paddle.
       // As this requires skill and rewards the player by making a return more difficult it's a
@@ -133,10 +143,10 @@ class GameCanvas extends Component {
       }
     } else if (
       this.gameBall.x + this.gameBall.width + this.gameBall.velocityX >=
-        this.player2.x &&
+      this.player2.x &&
       this.gameBall.y + this.gameBall.velocityY > this.player2.y &&
       this.gameBall.y + this.gameBall.velocityY <=
-        this.player2.y + this.player2.height
+      this.player2.y + this.player2.height
     ) {
       this.gameBall.velocityX = (Math.abs(this.gameBall.velocityX)) * -1
       if (40 in this.keys) {
@@ -148,7 +158,11 @@ class GameCanvas extends Component {
       this.gameBall.x + this.gameBall.velocityX <
       this.player1.x - this.player1.width
     ) {
-      this.p2Score += 1;
+      this.p2Score += 1
+      if (this.p2Score >= this.props.pointsToWin) {
+        this.winner = 2
+        this.props._changeGameStart()
+      }
       // this.deadBalls appears to be an intentional memory leak
       // this.deadBalls.push(this.gameBall);
       this.gameBall = new this.GameClasses.Box({
@@ -156,7 +170,7 @@ class GameCanvas extends Component {
         y: this.canvas.height / 2,
         width: 15,
         height: 15,
-        color: "#FF0000",
+        color: this,
         velocityX: this.gameBall.velocityX,
         velocityY: 1,
       })
@@ -164,7 +178,11 @@ class GameCanvas extends Component {
       this.gameBall.x + this.gameBall.velocityX >
       this.player2.x + this.player2.width
     ) {
-      this.p1Score += 1;
+      this.p1Score += 1
+      if (this.p1Score >= this.props.pointsToWin) {
+        this.winner = 1
+        this.props._changeGameStart()
+      }
       // this.deadBalls appears to be an intentional memory leak
       // this.deadBalls.push(this.gameBall);
       this.gameBall = new this.GameClasses.Box({
@@ -172,10 +190,10 @@ class GameCanvas extends Component {
         y: this.canvas.height / 2,
         width: 15,
         height: 15,
-        color: "#FF0000",
+        color: '#FF0000',
         velocityX: this.gameBall.velocityX,
         velocityY: 1
-      });
+      })
     } else {
       this.gameBall.x += this.gameBall.velocityX
       this.gameBall.y += this.gameBall.velocityY
@@ -185,6 +203,8 @@ class GameCanvas extends Component {
   // clear canvas and redraw according to new game state
   _drawRender = () => {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    if(this.winner){
+    this._displayWinner(this.winner)}
     this._displayScore1()
     this._displayScore2()
     this._drawBox(this.player1)
@@ -196,25 +216,27 @@ class GameCanvas extends Component {
   // take in game object and draw to canvas
   _drawBox = box => {
     this.ctx.fillStyle = box.color
-
     this.ctx.fillRect(box.x, box.y, box.width, box.height)
-  };
+  }
+
+  // Display the winner!
+  _displayWinner = (winner) => {
+    this.ctx.font = '20px Arial'
+    this.ctx.fillStyle = 'rgb(255, 255, 255)'
+    this.ctx.fillText("Player " + winner + " wins!", this.canvas.width / 2 + (this.p1Score === 2 ? -155 : 33), 150)
+  }
 
   // render player 1 score
   _displayScore1 = () => {
-    this.ctx.font = "20px Arial"
-    this.ctx.fillStyle = "rgb(255, 255, 255)"
-    this.ctx.fillText(
-      this.p1Score,
-      this.canvas.width / 2 - (this.p1Score > 9 ? 55 : 45),
-      30
-    );
-  };
+    this.ctx.font = '20px Arial'
+    this.ctx.fillStyle = 'rgb(255, 255, 255)'
+    this.ctx.fillText(this.p1Score, this.canvas.width / 2 - (this.p1Score > 9 ? 55 : 45), 30)
+  }
 
   // render player 2 score
   _displayScore2 = () => {
-    this.ctx.font = "20px Arial"
-    this.ctx.fillStyle = "rgb(255, 255, 255)"
+    this.ctx.font = '20px Arial'
+    this.ctx.fillStyle = 'rgb(255, 255, 255)'
     this.ctx.fillText(this.p2Score, this.canvas.width / 2 + 33, 30)
   }
 
@@ -252,7 +274,7 @@ class GameCanvas extends Component {
         this.y = y || 10
         this.width = width
         this.height = height
-        this.color = color || "#FFFFFF"
+        this.color = color || '#FFFFFF'
         this.velocityX = velocityX || 2
         this.velocityY = velocityY || 2
       }
@@ -266,10 +288,10 @@ class GameCanvas extends Component {
         ref="pong_canvas"
         width="750"
         height="500"
-        style={{ background: "#12260e", border: "4px solid #FFF" }}
+        style={{ background: '#12260e', border: '4px solid #FFF' }}
       />
-    );
+    )
   }
 }
 
-export default GameCanvas;
+export default GameCanvas
