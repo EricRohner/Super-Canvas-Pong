@@ -9,17 +9,17 @@ class GameControls extends Component {
     return str
   }
 
-  // return a new player (or ball) object updated with the red value (0-255)
+  // return a new player (or ball) object updated with the red value (0-255) converted to hex and inserted appropriately
   _changeRed = (value, player) => {
     const red = this._intToHex(value)
     return { ...player, color: `#${red}${player.color.substring(3, 7)}` }
   }
-
+  // green
   _changeGreen = (value, player) => {
     const green = this._intToHex(value)
     return { ...player, color: `${player.color.substring(0, 3)}${green}${player.color.substring(5, 7)}` }
   }
-
+  // blue
   _changeBlue = (value, player) => {
     const blue = this._intToHex(value)
     return { ...player, color: `${player.color.substring(0, 5)}${blue}` }
@@ -37,9 +37,10 @@ class GameControls extends Component {
   render() {
     return (
       <main className="controlBody">
+        {/* this section contains our Start/Pause and reset buttons along with an input for max score and a slider for ballVelocity */}
         <section className="top">
-          <p onClick= {this.props._changeGameStart}>Start/Pause</p>
-          <p onClick= {this.props._toggleReset}>Reset</p>
+          <p onClick={this.props._changeGameStart}>Start/Pause</p>
+          <p onClick={this.props._toggleReset}>Reset</p>
           <label htmlFor="pointsToWin"> Points to win: </label>
           <input className="pointsToWin" onChange={(e) => this.props._changePointsToWin(e.target.value)} />
           <label htmlFor="ballVelocity"> Ball Velocity: </label>
@@ -47,6 +48,7 @@ class GameControls extends Component {
                  onChange={(e) => this.props._updateBall(this._changeBallVelocity(e.target.value))}
                  type="range" min="1" max="3" />
         </section>
+        {/* sliders to control the color of player 1*/}
         <section>
           <label htmlFor="P1Red">P1 red: </label>
           <input className="P1Red"
@@ -61,6 +63,7 @@ class GameControls extends Component {
                  onChange={(e) => this.props._updateP1(this._changeBlue(e.target.value, this.props.player1))}
                  type="range" min="0" max="255" />
         </section>
+        {/* sliders to control the color of player 2 */}
         <section>
           <label htmlFor="P2Red">P2 red: </label>
           <input className="P2Red"
@@ -75,6 +78,7 @@ class GameControls extends Component {
                  onChange={(e) => this.props._updateP2(this._changeBlue(e.target.value, this.props.player2))}
                  type="range" min="0" max="255" />
         </section>
+        {/* sliders to control the color of the ball */}
         <section>
           <label htmlFor="ballRed">Ball red: </label>
           <input className="ballRed"
@@ -89,9 +93,11 @@ class GameControls extends Component {
                  onChange={(e) => this.props._updateBall(this._changeBlue(e.target.value, this.props.ball))}
                  type="range" min="0" max="255" />
         </section>
+        {/* toggle Ai and a link to the source */}
         <section>
           <label htmlFor="ai">Enable AI</label>
           <input className="ai" onClick={this.props._toggleAi} type="checkbox" />
+          <a href="https://github.com/EricRohner/Super-Canvas-Pong">Source Code</a>
         </section>
       </main>
     )

@@ -87,11 +87,14 @@ class GameCanvas extends Component {
   _getAiTarget = (x, y, vX, vY) => {
     // simulate the ball moving, if it makes it to this.canvas.width return y as the ai's target
     // if it hits the top or bottom of the screen recursively call with the velocityY's sign switched
-    while((y + vY > 0 ) && (y + vY < this.canvas.height) && (x + vX < this.canvas.width)){
+    // I'm more than a little disappointed that I wasn't able to get this working by solving y=mx+b
+    // for b and then using that to solve for x when y intercepts canvas.height or 0. Sometimes you
+    // just have to go with the option that you know works correctly.
+    while ((y + vY > 0) && (y + vY < this.canvas.height) && (x + vX < this.canvas.width)) {
       y += vY
       x += vX
     }
-    if ((x + vX) >= this.canvas.width){
+    if ((x + vX) >= this.canvas.width) {
       return y
     } else {
       return this._getAiTarget(x, y, vX, vY * -1)
@@ -106,17 +109,19 @@ class GameCanvas extends Component {
     if (this.props.gameStart) {
       this._ballCollisionY()
       this._userInput(this.player1)
-      this._userInput(this.player2)
+      // if ai is turned on run _aiInput(), else run player2 input
+      if (this.props.ai) {
+        this._aiInput()
+      } else {
+        this._userInput(this.player2)
+      }
     }
     // the player has clicked reset so call the game init function and turn off the reset toggle
     if (this.props.reset) {
       this._initGame()
       this.props._toggleReset()
     }
-    // if ai is turned on run _aiInput()
-    if (this.props.ai) {
-      this._aiInput()
-    }
+    // update state in GameInterface to match any changes
     this.props._updateState(this.player1, this.player2, this.gameBall)
     this._drawRender()
     this.frameId = window.requestAnimationFrame(this._renderLoop)
@@ -152,8 +157,8 @@ class GameCanvas extends Component {
       // would result in it switching X direction every frame. Since few players have frame
       // perfect timing this essentially gives the top and bottom of the paddle a 50/50 chance
       // to lose the volley. Players don't like random chance hurting them in a skill game.
-      if(this.props.ai && this.gameBall.velocityX < 0){
-        this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityX  * -1, this.gameBall.velocityY)
+      if (this.props.ai && this.gameBall.velocityX < 0) {
+        this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityX * -1, this.gameBall.velocityY)
       }
       this.gameBall.velocityX = Math.abs(this.gameBall.velocityX)
       // check if the paddle is moving and increase ball velocityY accordingly. This stacks every frame
@@ -251,9 +256,9 @@ class GameCanvas extends Component {
   }
 
   _aiInput = () => {
-    if (this.player2.y > (this.aiTarget - this.player2.height/2)) {
+    if (this.player2.y > (this.aiTarget - this.player2.height / 2)) {
       this.player2.y -= this.player1.velocityY
-    } else if (this.player2.y < (this.aiTarget - this.player2.height/2)) {
+    } else if (this.player2.y < (this.aiTarget - this.player2.height / 2)) {
       this.player2.y += this.player1.velocityY
     }
   }
