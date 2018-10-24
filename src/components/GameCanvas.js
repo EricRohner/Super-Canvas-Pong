@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
 // removed useless constructor and 2 lines that pushed to deadBalls[]
-
 class GameCanvas extends Component {
+
   //when props update, update the gameCanvas to reflect the changes.
   componentDidUpdate() {
     this.player1 = { ...this.player1, ...this.props.player1 }
@@ -18,12 +18,11 @@ class GameCanvas extends Component {
     // initialize canvas element and bind it to our React class
     this.canvas = this.refs.pong_canvas
     this.ctx = this.canvas.getContext('2d')
-
     this.keys = {}
     // add keyboard input listeners to handle user interactions
     window.addEventListener('keydown', e => {
       // keycode is technically deprecated. In a production environment we'd want to test key and keyIdentifier !== undefined.
-      // however, since keyCode is actually the most supported one I'll stick with it.
+      // however, since keyCode is currently the most supported one and I don't need this code to last forever I'll stick with it.
       this.keys[e.keyCode] = 1
       if (e.target.nodeName !== 'INPUT') e.preventDefault()
     })
@@ -82,14 +81,15 @@ class GameCanvas extends Component {
 
   // the way this looks, it appears that the AI should perfectly predict the ball's movement every single time.
   // by only calling it at certain times in the code we can make it appear that the ai randomly misses. Users will
-  // eventually catch on and abuse the AI but it's pretty fun to play against and has a decently balanced difficulty.
-  // can you figure out how to make it miss every time?
+  // eventually catch on and abuse the AI but it's pretty fun to play against and has a decently balanced difficulty
+  // until you figure out how to make it miss.
   _getAiTarget = (x, y, vX, vY) => {
     // simulate the ball moving, if it makes it to this.canvas.width return y as the ai's target
-    // if it hits the top or bottom of the screen recursively call with the velocityY's sign switched
+    // if it hits the top or bottom of the canvas recursively call with the velocityY's sign switched
     // I'm more than a little disappointed that I wasn't able to get this working by solving y=mx+b
     // for b and then using that to solve for x when y intercepts canvas.height or 0. Sometimes you
-    // just have to go with the option that you know works correctly.
+    // just have to go with the option that you know works correctly rather than wonder why your "perfectly good math"
+    // isn't working. I swear I can do middle school algebra.
     while ((y + vY > 0) && (y + vY < this.canvas.height) && (x + vX < this.canvas.width)) {
       y += vY
       x += vX
@@ -103,18 +103,13 @@ class GameCanvas extends Component {
 
   // recursively process game state and redraw canvas
   _renderLoop = () => {
-
     // we want to stop all movement until the game starts. _drawRender has been moved to the render loop from _ballCollisionX
     // so that the players can see their changes to ball and paddle colors pre-game.
     if (this.props.gameStart) {
       this._ballCollisionY()
       this._userInput(this.player1)
       // if ai is turned on run _aiInput(), else run player2 input
-      if (this.props.ai) {
-        this._aiInput()
-      } else {
-        this._userInput(this.player2)
-      }
+      this.props.ai ? this._aiInput() : this._userInput(this.player2)
     }
     // the player has clicked reset so call the game init function and turn off the reset toggle
     if (this.props.reset) {
