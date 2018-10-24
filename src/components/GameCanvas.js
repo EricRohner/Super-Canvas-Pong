@@ -206,7 +206,7 @@ class GameCanvas extends Component {
         this.props._changeGameStart()
       }
       this.gameBall = ({ ...this.gameBall, x: this.canvas.width / 2, y: this.canvas.height / 2, })
-      // the ball has bounced off player1's paddle so retarget the ai.
+      // the ball has bounced off player1's paddle so re-target the ai.
       this.aiTarget = this._getAiTarget(this.gameBall.x, this.gameBall.y, this.gameBall.velocityX, this.gameBall.velocityY)
     } else {
       this.gameBall.x += this.gameBall.velocityX
